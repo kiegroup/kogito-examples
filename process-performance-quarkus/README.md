@@ -1,8 +1,8 @@
-# Process + Quarkus example
+# Process Quarkus Performance
 
 ## Description
 
-A simple process service used to run throughput tests. This test relies on Kafka. So to be able to run this you need to have
+A simple process service used to run throughput tests on Quarkus. This test relies on Kafka. So to be able to run this you need to have
 Kafka cluster installed and available over the network. Refer to [Kafka Apache site](https://kafka.apache.org/quickstart) to more information about how to install. 
 
 ## Installing and Running
