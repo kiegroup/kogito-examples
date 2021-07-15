@@ -157,6 +157,7 @@
         <module>process-postgresql-persistence-quarkus</module>
         <module>process-postgresql-persistence-springboot</module>
         <module>process-quarkus-example</module>
+        <module>process-saga-quarkus</module>
         <module>process-springboot-example</module>
         <module>process-scripts-quarkus</module>
         <module>process-scripts-springboot</module>
