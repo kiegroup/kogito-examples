@@ -105,7 +105,7 @@ void setupMultijobPrLTSChecks() {
 * also we set a specific repository for the pr checks
 */
 void setupDeployJob(String jobFolder, KogitoJobType jobType) {
-    def jobParams = getJobParams('kogito-examples-deploy', jobFolder, 'Jenkinsfile.deploy', 'Kogito Examples Deploy')
+    def jobParams = getJobParams('kogito-examples-deploy', jobFolder, '.ci/jenkins/Jenkinsfile.deploy', 'Kogito Examples Deploy')
     if (jobType == KogitoJobType.PR) {
         jobParams.git.branch = '${BUILD_BRANCH_NAME}'
         jobParams.git.author = '${GIT_AUTHOR}'
@@ -164,7 +164,7 @@ void setupDeployJob(String jobFolder, KogitoJobType jobType) {
 }
 
 void setupPromoteJob(String jobFolder, KogitoJobType jobType) {
-    KogitoJobTemplate.createPipelineJob(this, getJobParams('kogito-examples-promote', jobFolder, 'Jenkinsfile.promote', 'Kogito Examples Promote')).with {
+    KogitoJobTemplate.createPipelineJob(this, getJobParams('kogito-examples-promote', jobFolder, '.ci/jenkins/Jenkinsfile.promote', 'Kogito Examples Promote')).with {
         parameters {
             stringParam('DISPLAY_NAME', '', 'Setup a specific build display name')
 
