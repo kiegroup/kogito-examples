@@ -16,15 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.kie.kogito.dmn.springboot.consumer.example;
+package org.kie.kogito.dmn.springboot.example;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.kie.kogito.decision.DecisionModel;
-import org.kie.kogito.decision.DecisionModels;
-import org.kie.kogito.dmn.DmnDecisionModel;
-import org.kie.kogito.dmn.consumer.example.customprofiles.CustomDMNProfile;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,18 +28,15 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = KogitoSpringbootApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class TrafficViolationTest {
+public class AllowedValuesTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    DecisionModels decisionModels;
 
     @BeforeEach
     public void setUp() {
@@ -52,33 +44,41 @@ public class TrafficViolationTest {
     }
 
     @Test
-    public void testEvaluateTrafficViolation() {
+    public void testAllowedValuesWithValidValue() {
         given()
                 .body("{\n" +
-                        "    \"Driver\": {\n" +
-                        "        \"Points\": 2\n" +
-                        "    },\n" +
-                        "    \"Violation\": {\n" +
-                        "        \"Type\": \"speed\",\n" +
-                        "        \"Actual Speed\": 120,\n" +
-                        "        \"Speed Limit\": 100\n" +
-                        "    }\n" +
+                        "  \"p1\": {\n" +
+                        "    \"Name\": \"Joe\",\n" +
+                        "    \"Interests\": [\n" +
+                        "      \"Golf\"\n" +
+                        "    ]\n" +
+                        "  }\n" +
                         "}")
                 .contentType(ContentType.JSON)
                 .when()
-                .post("/Traffic Violation")
+                .post("/AllowedValuesChecksInsideCollection")
                 .then()
                 .statusCode(200)
-                .body("'Should the driver be suspended?'", is("No"));
+                .body("'MyDecision'", is("The Person Joe likes 1 thing(s)."));
     }
 
     @Test
-    void testCustomDMNProfile() {
-        assertThat(decisionModels).isNotNull();
-        DecisionModel decisionModel = decisionModels.getDecisionModel("https://github.com/kiegroup/drools/kie-dmn/_A4BCA8B8-CF08-433F-93B2-A2598F19ECFF", "Traffic Violation");
-        assertThat(decisionModel).isNotNull().isInstanceOf(DmnDecisionModel.class);
-        DmnDecisionModel dmnDecisionModel = (DmnDecisionModel) decisionModel;
-        assertThat(dmnDecisionModel).isNotNull();
-        assertThat(dmnDecisionModel.getProfiles()).anyMatch(profile -> profile instanceof CustomDMNProfile);
+    public void testAllowedValuesWithInvalidValue() {
+        given()
+                .body("{\n" +
+                        "  \"p1\": {\n" +
+                        "    \"Name\": \"Joe\",\n" +
+                        "    \"Interests\": [\n" +
+                        "      \"Dancing\"\n" +
+                        "    ]\n" +
+                        "  }\n" +
+                        "}")
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/AllowedValuesChecksInsideCollection")
+                .then()
+                .statusCode(500)
+                .body("messages[0].message", containsString(
+                        "Error while evaluating node 'MyDecision' for dependency 'p1': the dependency value '{Interests=[Dancing], Name=Joe}' is not allowed by the declared type (DMNType{ http://www.trisotech.com/definitions/_238bd96d-47cd-4746-831b-504f3e77b442 : Person })"));
     }
 }
