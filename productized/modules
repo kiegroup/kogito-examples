@@ -1,2 +1,2 @@
 pom.xml;kogito-java-examples,kogito-quarkus-examples,kogito-springboot-examples
-serverless-workflow-examples/pom.xml;serverless-workflow-camel-routes,serverless-workflow-data-index-persistence-addon-quarkus,serverless-workflow-dmn-quarkus,serverless-workflow-events-quarkus,serverless-workflow-functions-events-quarkus,serverless-workflow-oauth2-orchestration-quarkus,serverless-workflow-python-quarkus
+serverless-workflow-examples/pom.xml;serverless-workflow-camel-routes,serverless-workflow-data-index-persistence-addon-quarkus,serverless-workflow-dmn-quarkus,serverless-workflow-events-quarkus,serverless-workflow-functions-events-quarkus,serverless-workflow-oauth2-orchestration-quarkus,serverless-workflow-python-quarkus,serverless-workflow-fault-tolerance
