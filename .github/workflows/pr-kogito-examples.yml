@@ -20,20 +20,11 @@ jobs:
     timeout-minutes: 180
     strategy:
       matrix:
-        job_name: [ kogito-java-examples, kogito-quarkus-examples, kogito-springboot-examples, serverless-workflow-examples ]
+        job_name: [ serverless-workflow-examples ]
         os: [ubuntu-latest]
         java-version: [17]
         maven-version: ['3.9.6']
         include:
-          - job_name: kogito-java-examples
-            repository: incubator-kie-kogito-examples
-            env_KOGITO_EXAMPLES_SUBFOLDER_POM: kogito-java-examples/
-          - job_name: kogito-quarkus-examples
-            repository: kogito-examples
-            env_KOGITO_EXAMPLES_SUBFOLDER_POM: kogito-quarkus-examples/
-          - job_name: kogito-springboot-examples
-            repository: kogito-examples
-            env_KOGITO_EXAMPLES_SUBFOLDER_POM: kogito-springboot-examples/
           - job_name: serverless-workflow-examples
             repository: kogito-examples
             env_KOGITO_EXAMPLES_SUBFOLDER_POM: serverless-workflow-examples/
@@ -57,6 +48,7 @@ jobs:
         uses: kiegroup/kie-ci/.ci/actions/build-chain@main
         env:
           KOGITO_EXAMPLES_SUBFOLDER_POM: ${{ matrix.env_KOGITO_EXAMPLES_SUBFOLDER_POM }}
+          BUILD_MVN_OPTS: -Dproductized
         with:
           annotations-prefix: ${{ runner.os }}-${{ matrix.java-version }}/${{ matrix.maven-version }}
           github-token: "${{ secrets.GITHUB_TOKEN }}"
