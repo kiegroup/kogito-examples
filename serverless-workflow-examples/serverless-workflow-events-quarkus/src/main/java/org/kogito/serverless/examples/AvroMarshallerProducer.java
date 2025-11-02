@@ -23,10 +23,15 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Named;
 import java.io.IOException;
-import org.kie.kogito.addon.quarkus.messaging.common.ChannelFormat;
+
 import org.kie.kogito.event.CloudEventUnmarshallerFactory;
 import org.kie.kogito.event.avro.AvroCloudEventUnmarshallerFactory;
 import org.kie.kogito.event.avro.AvroIO;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Named;
 
 @ApplicationScoped
 public class AvroMarshallerProducer {
@@ -40,7 +45,6 @@ public class AvroMarshallerProducer {
 
     @Produces
     @Named("avro")
-    @ChannelFormat
     public CloudEventUnmarshallerFactory<byte[]> getAvroCloudEventUnmarshallerFactory() {
         return new AvroCloudEventUnmarshallerFactory(avroIO);
     }
