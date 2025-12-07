@@ -2,7 +2,6 @@ import org.jenkinsci.plugins.workflow.libs.Library
 @Library('jenkins-pipeline-shared-libraries')_
 
 import org.kie.jenkins.MavenCommand
-import org.kie.jenkins.MavenStagingHelper
 
 deployProperties = [:]
 
@@ -10,12 +9,11 @@ examplesHelper = null
 
 pipeline {
     agent {
-        label 'kie-rhel8 && docker && kie-mem16g && !built-in'
-    }
-
-    tools {
-        maven env.BUILD_MAVEN_TOOL
-        jdk env.BUILD_JDK_TOOL
+        docker { 
+            image env.AGENT_DOCKER_BUILDER_IMAGE
+            args env.AGENT_DOCKER_BUILDER_ARGS
+            label util.avoidFaultyNodes()
+        }
     }
 
     options {
@@ -23,27 +21,17 @@ pipeline {
         timeout(time: 180, unit: 'MINUTES')
     }
 
-    // parameters {
-    // For parameters, check into ./dsl/jobs.groovy file
-    // }
-
     environment {
-        // Static env is defined into ./dsl/jobs.groovy file
-
         KOGITO_CI_EMAIL_TO = credentials("${JENKINS_EMAIL_CREDS_ID}")
 
-        // Keep here for visitibility
-        MAVEN_OPTS = '-Xms1024m -Xmx4g'
-
         PR_BRANCH_HASH = "${util.generateHash(10)}"
-        MAVEN_DEPLOY_LOCAL_DIR = "${WORKSPACE}/maven_deploy_dir"
     }
 
     stages {
         stage('Initialize') {
             steps {
                 script {
-                    cleanWs()
+                    cleanWs(disableDeferredWipeout: true)
 
                     checkout scm
                     examplesHelper = load '.ci/jenkins/helper_scripts/examples.groovy'
@@ -88,7 +76,7 @@ pipeline {
                 script {
                     dir(getRepoName()) {
                         if (githubscm.isBranchExist('origin',getPRBranch())) {
-                            githubscm.removeRemoteBranch('origin', getPRBranch())
+                            githubscm.removeRemoteBranch('origin', getPRBranch(), getGitAuthorPushCredsId())
                         }
                         githubscm.createBranch(getPRBranch())
                     }
@@ -104,11 +92,28 @@ pipeline {
                     dir(getRepoName()) {
                         def oldKogitoVersion = readMavenPom(file: 'pom.xml').version
                         echo "Got old Kogito version ${oldKogitoVersion}"
-
-                        maven.mvnVersionsUpdateParentAndChildModules(getMavenCommand(), getProjectVersion(), true)
-                        maven.mvnSetVersionProperty(getMavenCommand(), 'version.org.kie.kogito', getProjectVersion())
-                        maven.mvnSetVersionProperty(getMavenCommand(), 'kogito.bom.version', getProjectVersion())
-                        maven.mvnSetVersionProperty(getMavenCommand(), 'version.org.drools', getDroolsVersion())
+                        configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_FILE')]){
+                            maven.mvnVersionsUpdateParentAndChildModules(
+                                getMavenCommand().withSettingsXmlFile(MAVEN_SETTINGS_FILE),
+                                getProjectVersion(),
+                                true
+                            )
+                            maven.mvnSetVersionProperty(
+                                getMavenCommand().withSettingsXmlFile(MAVEN_SETTINGS_FILE),
+                                'version.org.kie.kogito',
+                                getProjectVersion()
+                            )
+                            maven.mvnSetVersionProperty(
+                                getMavenCommand().withSettingsXmlFile(MAVEN_SETTINGS_FILE),
+                                'kogito.bom.version',
+                                getProjectVersion()
+                            )
+                            maven.mvnSetVersionProperty(
+                                getMavenCommand().withSettingsXmlFile(MAVEN_SETTINGS_FILE),
+                                'version.org.drools',
+                                getDroolsVersion()
+                            )
+                        }
 
                         if (getProjectVersion() != oldKogitoVersion) {
                             def status = sh(script: "grep -ir '${oldKogitoVersion}' --include='pom.xml'", returnStatus: true)
@@ -123,16 +128,17 @@ pipeline {
         stage('Build kogito-examples') {
             steps {
                 script {
-                    dir(getRepoName()) {
-                        def mvnCmd = getMavenCommand()
-                            .withOptions(env.BUILD_MVN_OPTS_CURRENT ? [ env.BUILD_MVN_OPTS_CURRENT ] : [])
-                            .withOptions(env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ? [ env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ] : [])
-                            .withProperty('maven.test.failure.ignore', true)
-                        
-                        if (params.SKIP_TESTS) {
-                            mvnCmd.skipTests() // Conflict somehow with Python testing. If `skipTests={anyvalue}` is set, then exec plugin is not executed ...
-                        }
-                        util.runWithPythonVirtualEnv(mvnCmd.getFullRunCommand('clean install'), 'swf')
+                    def mvnCmd = getMavenCommand()
+                        .withOptions(env.BUILD_MVN_OPTS_CURRENT ? [ env.BUILD_MVN_OPTS_CURRENT ] : [])
+                        .withOptions(env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ? [ env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ] : [])
+                        .withProperty('maven.test.failure.ignore', true)
+                    if (params.SKIP_TESTS) {
+                        mvnCmd.skipTests() // Conflict somehow with Python testing. If `skipTests={anyvalue}` is set, then exec plugin is not executed ...
+                    }
+                    configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_FILE')]){
+                        mvnCmd
+                            .withSettingsXmlFile(MAVEN_SETTINGS_FILE)
+                            .run('clean install')
                     }
                 }
             }
@@ -145,37 +151,22 @@ pipeline {
                 }
             }
         }
-        stage('Deploy kogito-examples locally') {
-            steps {
-                script {
-                    dir(getRepoName()) {
-                        runMavenDeploy(true)
-                    }
-                }
-            }
-        }
-        stage('Upload artifacts to given repository') {
+        stage('Deploy parent poms') {
             when {
-                expression { return !isRelease() && shouldDeployToRepository() }
+                expression { shouldDeployToRepository() }
             }
             steps {
                 script {
-                    dir(getRepoName()) {
-                        // Deploy to specific repository with credentials
-                        maven.uploadLocalArtifacts(env.MAVEN_REPO_CREDS_ID, getLocalDeploymentFolder(), getMavenRepoZipUrl())
-                    }
-                }
-            }
-        }
-        stage('Stage artifacts') {
-            when {
-                expression { return shouldStageArtifacts() }
-            }
-            steps {
-                script {
-                    dir(getRepoName()) {
-                        // Stage release artifacts
-                        runMavenStage()
+                    withCredentials([usernamePassword(credentialsId: env.MAVEN_REPO_CREDS_ID, usernameVariable: 'REPOSITORY_USER', passwordVariable: 'REPOSITORY_TOKEN')]) {
+                        configFileProvider([configFile(fileId: env.MAVEN_SETTINGS_CONFIG_FILE_ID, variable: 'MAVEN_SETTINGS_FILE')]){
+                            getMavenCommand()
+                                .withOptions(env.BUILD_MVN_OPTS_CURRENT ? [ env.BUILD_MVN_OPTS_CURRENT ] : [])
+                                .withOptions(env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ? [ env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ] : [])
+                                .withOptions("-pl .,kogito-java-examples,kogito-quarkus-examples,kogito-springboot-examples,serverless-workflow-examples")
+                                .skipTests(true)
+                                .withSettingsXmlFile(MAVEN_SETTINGS_FILE)
+                                .run("deploy -DdeployAtEnd -Dapache.repository.username=${REPOSITORY_USER} -Dapache.repository.password=${REPOSITORY_TOKEN} -DretryFailedDeploymentCount=5")
+                        }
                     }
                 }
             }
@@ -211,7 +202,7 @@ pipeline {
         }
         cleanup {
             script {
-                util.cleanNode('docker')
+                util.cleanNode()
             }
         }
     }
@@ -231,7 +222,7 @@ void saveReports() {
 
 void checkoutRepo() {
     deleteDir()
-    checkout(githubscm.resolveRepository(getRepoName(), getGitAuthor(), getBuildBranch(), false))
+    checkout(githubscm.resolveRepository(getRepoName(), getGitAuthor(), getBuildBranch(), false, getGitAuthorCredsId()))
 }
 
 void addNotIgnoredPoms() {
@@ -259,23 +250,16 @@ void commitAndCreatePR() {
         prBody += '\nPlease review and merge.'
     }
     // Not using githubscm.commitChanges() because globbing won't work.
-    // See: https://github.com/kiegroup/kogito-runtimes/pull/570#discussion_r449268738
+    // See: https://github.com/apache/incubator-kie-kogito-runtimes/pull/570#discussion_r449268738
     addNotIgnoredPoms()
+    githubscm.setUserConfigFromCreds(getGitAuthorPushCredsId())
     sh "git commit -m '${commitMsg}'"
-    githubscm.pushObject('origin', getPRBranch(), getGitAuthorCredsID())
-    deployProperties["${getRepoName()}.pr.link"] = githubscm.createPRWithLabels(commitMsg, prBody, getBuildBranch(), ['skip-ci'] as String[], getGitAuthorCredsID())
-}
-
-boolean isSpecificArtifactsUpload() {
-    return env.MAVEN_DEPLOY_REPOSITORY && env.MAVEN_REPO_CREDS_ID
-}
-
-boolean shouldStageArtifacts() {
-    return isRelease()
+    githubscm.pushObject('origin', getPRBranch(), getGitAuthorPushCredsId())
+    deployProperties["${getRepoName()}.pr.link"] = githubscm.createPRWithLabels(commitMsg, prBody, getBuildBranch(), ['skip-ci'] as String[], getGitAuthorCredsId())
 }
 
 boolean shouldDeployToRepository() {
-    return env.MAVEN_DEPLOY_REPOSITORY && env.MAVEN_REPO_CREDS_ID && getGitAuthor() == 'kiegroup'
+    return env.MAVEN_DEPLOY_REPOSITORY && env.MAVEN_REPO_CREDS_ID && getGitAuthor() == 'apache'
 }
 
 boolean isRelease() {
@@ -311,8 +295,12 @@ String getPRBranch() {
     return params.KOGITO_PR_BRANCH
 }
 
-String getGitAuthorCredsID() {
-    return env.AUTHOR_CREDS_ID
+String getGitAuthorCredsId() {
+    return env.GIT_AUTHOR_CREDS_ID
+}
+
+String getGitAuthorPushCredsId() {
+    return env.GIT_AUTHOR_PUSH_CREDS_ID
 }
 
 void setDeployPropertyIfNeeded(String key, def value) {
@@ -321,51 +309,14 @@ void setDeployPropertyIfNeeded(String key, def value) {
     }
 }
 
-MavenCommand getMavenCommand() {
+MavenCommand getMavenCommand(String directory = '') {
+    directory = directory ?: getRepoName()
     MavenCommand mvnCmd = new MavenCommand(this, ['-fae', '-ntp'])
-                                .withSettingsXmlId(env.MAVEN_SETTINGS_CONFIG_FILE_ID)
                                 .withOptions(env.BUILD_MVN_OPTS ? [ env.BUILD_MVN_OPTS ] : [])
+                                .inDirectory(directory)
                                 .withProperty('full')
     if (env.MAVEN_DEPENDENCIES_REPOSITORY) {
         mvnCmd.withDependencyRepositoryInSettings('deps-repo', env.MAVEN_DEPENDENCIES_REPOSITORY)
     }
     return mvnCmd
-}
-
-void runMavenDeploy(boolean localDeployment = false) {
-    mvnCmd = getMavenCommand()
-                .withOptions(env.BUILD_MVN_OPTS_CURRENT ? [ env.BUILD_MVN_OPTS_CURRENT ] : [])
-                .withOptions(env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ? [ env.KOGITO_EXAMPLES_BUILD_MVN_OPTS ] : [])
-
-    if (localDeployment) {
-        mvnCmd.withLocalDeployFolder(getLocalDeploymentFolder())
-    } else if (env.MAVEN_DEPLOY_REPOSITORY) {
-        mvnCmd.withDeployRepository(env.MAVEN_DEPLOY_REPOSITORY)
-    }
-
-    mvnCmd.withOptions(examplesHelper.getDeployableArtifactIds().collect { "-pl :${it} "})
-
-    mvnCmd.skipTests(true).run('clean deploy')
-
-    util.runWithPythonVirtualEnv(mvnCmd.skipTests(true).getFullRunCommand('clean deploy'), 'swf')
-}
-
-void runMavenStage() {
-    MavenStagingHelper stagingHelper = getStagingHelper()
-    deployProperties.putAll(stagingHelper.stageLocalArtifacts(env.NEXUS_STAGING_PROFILE_ID, getLocalDeploymentFolder()))
-    stagingHelper.promoteStagingRepository(env.NEXUS_BUILD_PROMOTION_PROFILE_ID)
-}
-
-MavenStagingHelper getStagingHelper() {
-    return new MavenStagingHelper(this, getMavenCommand())
-                .withNexusReleaseUrl(env.NEXUS_RELEASE_URL)
-                .withNexusReleaseRepositoryId(env.NEXUS_RELEASE_REPOSITORY_ID)
-}
-
-String getLocalDeploymentFolder() {
-    return "${env.MAVEN_DEPLOY_LOCAL_DIR}/${getRepoName()}"
-}
-
-String getMavenRepoZipUrl() {
-    return "${env.MAVEN_DEPLOY_REPOSITORY.replaceAll('/content/', '/service/local/').replaceFirst('/*$', '')}/content-compressed"
 }
