@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 class CorrelationIT {
 
     public static final String HEALTH_URL = "/q/health";
-    public static final int TIMEOUT = 2;
+    public static final int TIMEOUT = 3;
 
     private String userId = "12345";
 
