@@ -42,7 +42,7 @@
     <version.compiler.plugin>3.14.0</version.compiler.plugin>
     <maven.compiler.release>17</maven.compiler.release>
     <version.failsafe.plugin>3.5.2</version.failsafe.plugin>
-    <version.io.quarkiverse.openapi.generator>2.10.0-lts</version.io.quarkiverse.openapi.generator>
+    <version.io.quarkiverse.openapi.generator>2.11.1-lts</version.io.quarkiverse.openapi.generator>
   </properties>
   <dependencyManagement>
     <dependencies>
