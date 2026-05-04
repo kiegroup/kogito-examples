@@ -27,15 +27,15 @@
   <parent>
     <groupId>org.kie.kogito.examples</groupId>
     <artifactId>kogito-springboot-examples</artifactId>
-    <version>111-SNAPSHOIT</version>
+    <version>111-SNAPSHOT</version>
   </parent>
   <artifactId>process-performance-springboot</artifactId>
   <name>Kogito Example :: Springboot Performance test</name>
   <description>Springboot Performance test</description>
 
   <properties>
-    <version.org.kie.kogito>111-SNAPSHOIT</version.org.kie.kogito>
-    <kogito.bom.version>111-SNAPSHOIT</kogito.bom.version>
+    <version.org.kie.kogito>111-SNAPSHOT</version.org.kie.kogito>
+    <kogito.bom.version>111-SNAPSHOT</kogito.bom.version>
   </properties>
 
   <dependencyManagement>
