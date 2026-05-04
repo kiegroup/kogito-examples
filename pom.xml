@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-build-no-bom-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>111-SNAPSHOIT</version>
   </parent>
 
   <groupId>org.kie.kogito.examples</groupId>
@@ -72,7 +72,7 @@
     <repository>
       <id>central</id>
       <name>Central</name>
-      <url>https://repo1.maven.org/maven2/</url>
+      <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
     <repository>
       <id>github</id>
@@ -94,7 +94,7 @@
     <pluginRepository>
       <id>central</id>
       <name>Central</name>
-      <url>https://repo1.maven.org/maven2/</url>
+      <url>https://repo.maven.apache.org/maven2/</url>
     </pluginRepository>
     <pluginRepository>
       <id>github</id>
@@ -116,7 +116,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
+    <version.org.kie.kogito>111-SNAPSHOIT</version.org.kie.kogito>
 
     <surefire.forkCount>1</surefire.forkCount>
     <failsafe.include>**/*IT.java</failsafe.include>
