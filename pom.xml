@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.kie.kogito</groupId>
     <artifactId>kogito-build-no-bom-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>111-SNAPSHOT</version>
   </parent>
 
   <groupId>org.kie.kogito.examples</groupId>
@@ -36,7 +36,7 @@
   <packaging>pom</packaging>
 
   <name>Kogito Example</name>
-  <description>Kogito Example</description>
+  <description>This repository is a fork of https://github.com/apache/incubator-kie-kogito-examples used for the purposes od SonataFlow.</description>
 
   <url>http://kogito.kie.org</url>
   <inceptionYear>2019</inceptionYear>
@@ -44,7 +44,6 @@
     <name>The Apache Software Foundation</name>
     <url>https://apache.org/</url>
   </organization>
-
   <licenses>
     <license>
       <name>Apache Software License, Version 2.0</name>
@@ -54,49 +53,73 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:https://github.com/apache/incubator-kie-kogito-examples.git</connection>
-    <developerConnection>scm:git:https://github.com/apache/incubator-kie-kogito-examples.git</developerConnection>
-    <url>https://github.com/apache/incubator-kie-kogito-examples</url>
+    <connection>scm:git:https://github.com/kiegroup/kogito-examples.git</connection>
+    <developerConnection>scm:git:https://github.com/kiegroup/kogito-examples.git</developerConnection>
+    <url>https://github.com/kiegroup/kogito-examples</url>
   </scm>
 
-  <developers>
-    <developer>
-      <name>The Apache KIE Team</name>
-      <email>dev@kie.apache.org</email>
-      <url>https://kie.apache.org</url>
-      <organization>Apache Software Foundation</organization>
-      <organizationUrl>http://apache.org/</organizationUrl>
-    </developer>
-  </developers>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/kubesmarts/sonataflow-maven-repository</url>
+    </repository>
+    <snapshotRepository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/kubesmarts/sonataflow-maven-repository</url>
+    </snapshotRepository>
+  </distributionManagement>
 
-  <mailingLists>
-    <mailingList>
-      <name>Development List</name>
-      <subscribe>dev-subscribe@kie.apache.org</subscribe>
-      <unsubscribe>dev-unsubscribe@kie.apache.org</unsubscribe>
-      <post>dev@kie.apache.org</post>
-      <archive>https://lists.apache.org/list.html?dev@kie.apache.org</archive>
-    </mailingList>
-    <mailingList>
-      <name>User List</name>
-      <subscribe>users-subscribe@kie.apache.org</subscribe>
-      <unsubscribe>users-unsubscribe@kie.apache.org</unsubscribe>
-      <post>users@kie.apache.org</post>
-      <archive>https://lists.apache.org/list.html?users@kie.apache.org</archive>
-    </mailingList>
-    <mailingList>
-      <name>Commits List</name>
-      <subscribe>commits-subscribe@kie.apache.org</subscribe>
-      <unsubscribe>commits-unsubscribe@kie.apache.org</unsubscribe>
-      <post>commits@kie.apache.org</post>
-      <archive>https://lists.apache.org/list.html?commits@kie.apache.org</archive>
-    </mailingList>
-  </mailingLists>
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>github</id>
+      <name>GitHub Repository</name>
+      <url>https://maven.pkg.github.com/kubesmarts/sonataflow-maven-repository</url>
+    </repository>
+    <repository>
+      <id>redhat-ga-repository</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>github</id>
+      <name>GitHub Repository</name>
+      <url>https://maven.pkg.github.com/kubesmarts/sonataflow-maven-repository</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>redhat-ga-plugin-repository</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
+    <version.org.kie.kogito>111-SNAPSHOT</version.org.kie.kogito>
 
     <surefire.forkCount>1</surefire.forkCount>
     <failsafe.include>**/*IT.java</failsafe.include>
@@ -118,18 +141,6 @@
     <version.maven.artifact.plugin>3.4.1</version.maven.artifact.plugin>
   </properties>
 
-  <repositories>
-    <!-- useful to resolve parent pom when it is a SNAPSHOT -->
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>apache.snapshots</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/snapshots</url>
-    </repository>
-  </repositories>
-
   <profiles>
     <profile>
       <id>default</id>
@@ -137,11 +148,7 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <modules>
-        <module>kogito-java-examples</module>
-        <module>kogito-quarkus-examples</module>
-        <module>kogito-springboot-examples</module>
         <module>serverless-workflow-examples</module>
-        <module>gradle-examples</module>
       </modules>
     </profile>
   </profiles>
