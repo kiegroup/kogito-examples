@@ -15,18 +15,9 @@ updates:
     interval: daily
     time: '04:00'
   open-pull-requests-limit: 0
-  target-branch: "1.13.x"
+  target-branch: "9.105.x-prod"
   commit-message:
-    prefix: "[bot][1.13.x]"
-- package-ecosystem: maven
-  directory: "/"
-  schedule:
-    interval: daily
-    time: '05:00'
-  open-pull-requests-limit: 0
-  target-branch: "1.13.x-blue"
-  commit-message:
-    prefix: "[bot][blue]"
+    prefix: "[bot][9.105.x-prod]"
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
