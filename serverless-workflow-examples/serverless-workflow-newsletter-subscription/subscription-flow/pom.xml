@@ -35,7 +35,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <version.org.assertj>3.22.0</version.org.assertj>
+    <version.org.assertj>3.27.7</version.org.assertj>
     <version.org.wiremock>3.13.0</version.org.wiremock>
   </properties>
   <dependencyManagement>
