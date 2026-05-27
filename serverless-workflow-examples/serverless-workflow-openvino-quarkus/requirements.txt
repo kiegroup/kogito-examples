@@ -5,9 +5,9 @@ nncf==2.4.0
 
 
 # deep learning frameworks
-tensorflow-macos>=2.5,<=2.12; sys_platform == 'darwin' and platform_machine == 'arm64' # macOS M1 and M2
-tensorflow>=2.5,<=2.12; sys_platform == 'darwin' and platform_machine != 'arm64' # macOS x86
-tensorflow>=2.5,<=2.12; sys_platform == 'linux' or platform_system == 'Windows'
+tensorflow-macos>=2.12.1,<=2.13; sys_platform == 'darwin' and platform_machine == 'arm64' # macOS M1 and M2
+tensorflow>=2.12.1,<=2.13; sys_platform == 'darwin' and platform_machine != 'arm64' # macOS x86
+tensorflow>=2.12.1,<=2.13; sys_platform == 'linux' or platform_system == 'Windows'
 
 onnx>=1.11.0
 
