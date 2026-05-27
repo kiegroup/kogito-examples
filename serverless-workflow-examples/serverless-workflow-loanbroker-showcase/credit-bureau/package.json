@@ -12,11 +12,14 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "faas-js-runtime": "^0.9.7"
+    "faas-js-runtime": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2",
     "tape": "^5.0.1"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.2"
   }
 }
