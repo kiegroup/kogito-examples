@@ -55,12 +55,13 @@ test('Unit: handles a valid event as byte array', async t => {
 
   t.plan(4);
 
-  const cloudEventBinary = cloudevent;
   const dataArray = new Uint8Array(new TextEncoder().encode(JSON.stringify(data)).buffer);
-  cloudEventBinary.data = {
-    type: "Buffer",
-    data: [...dataArray]
-  };
+  const cloudEventBinary = cloudevent.cloneWith({
+    data: {
+      type: "Buffer",
+      data: [...dataArray]
+    }
+  });
 
   const result = await func(new MockContext(cloudEventBinary), dataArray);
   t.ok(result);
