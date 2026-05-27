@@ -19,7 +19,8 @@
     "react-dom": "18.2.0",
     "recoil": "^0.7.5",
     "sass": "^1.54.7",
-    "socket.io-client": "^4.5.2"
+    "socket.io-client": "^4.5.2",
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
