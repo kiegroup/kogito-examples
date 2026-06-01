@@ -20,7 +20,7 @@
     "recoil": "^0.7.5",
     "sass": "^1.54.7",
     "socket.io-client": "^4.5.2",
-    "ws": "^8.17.1"
+    "ws": "^8.20.1"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
