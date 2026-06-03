@@ -20,6 +20,7 @@
     "tape": "^5.0.1"
   },
   "overrides": {
-    "fast-uri": "^3.1.2"
+    "fast-uri": "^3.1.2",
+    "fastify": "^5.8.3"
   }
 }
