@@ -27,13 +27,18 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public class PostgresTestResource implements QuarkusTestResourceLifecycleManager {
 
-    private static final String IMAGE = "postgres:16-alpine";
+    private static final String IMAGE = System.getProperty(
+            "postgres.image",
+            "mirror.gcr.io/postgres:17-alpine");
+
     private PostgreSQLContainer<?> postgres;
 
     @Override
     public Map<String, String> start() {
-        postgres = new PostgreSQLContainer<>(IMAGE).withDatabaseName("kogito").withUsername("kogito")
+        DockerImageName imageName = DockerImageName.parse(IMAGE).asCompatibleSubstituteFor("postgres");
+        postgres = new PostgreSQLContainer<>(imageName).withDatabaseName("kogito").withUsername("kogito")
                 .withPassword("kogito");
+        
         postgres.start();
 
         Map<String, String> props = new HashMap<>();
