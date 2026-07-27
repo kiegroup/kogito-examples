@@ -15,14 +15,15 @@
     "faas-js-runtime": "^3.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4",
+    "nodemon": "^3.1.14",
     "supertest": "^4.0.2",
     "tape": "^5.0.1"
   },
   "overrides": {
-    "fast-uri": "^3.1.2",
+    "fast-uri": "^3.1.4",
     "fastify": "^5.8.3",
     "uuid": "^11.1.1",
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^4.3.0",
+    "brace-expansion": "^1.1.16"
   }
 }
