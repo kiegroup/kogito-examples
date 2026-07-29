@@ -35,7 +35,7 @@
   <packaging>jar</packaging>
   <properties>
     <version.org.assertj>3.27.7</version.org.assertj>
-    <version.io.cloudevents>2.3.0</version.io.cloudevents>
+    <version.io.cloudevents>3.0.0</version.io.cloudevents>
     <version.io.quarkiverse.reactivemessaging.http>2.2.0</version.io.quarkiverse.reactivemessaging.http>
   </properties>
   <dependencyManagement>
@@ -97,7 +97,7 @@
     <!-- Testing dependencies -->
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
