@@ -52,6 +52,7 @@
     <version.failsafe.plugin>${version.surefire.plugin}</version.failsafe.plugin>
     <okhttp.version>4.12.0</okhttp.version>
     <version.org.testcontainers>2.0.4</version.org.testcontainers>
+    <argLine></argLine>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -199,6 +200,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${version.failsafe.plugin}</version>
         <configuration>
+          <argLine>@{argLine}</argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
