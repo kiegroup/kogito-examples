@@ -31,15 +31,15 @@
   <artifactId>query-service</artifactId>
   <name>Kogito Example :: Serverless Workflow Query and Answer :: Query Service</name>
   <properties>
-    <quarkus-plugin.version>3.27.4.1</quarkus-plugin.version>
+    <quarkus-plugin.version>3.33.3</quarkus-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>    
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.version>3.27.4.1</quarkus.platform.version>
+    <quarkus.platform.version>3.33.3</quarkus.platform.version>
     <kogito.bom.group-id>org.kie.kogito</kogito.bom.group-id>
     <kogito.bom.artifact-id>kogito-bom</kogito.bom.artifact-id>
     <kogito.bom.version>111-SNAPSHOT</kogito.bom.version>
     <version.io.quarkiverse.reactivemessaging.http>2.5.0-lts</version.io.quarkiverse.reactivemessaging.http>
-    <version.io.cloudevents>2.3.0</version.io.cloudevents>
+    <version.io.cloudevents>3.0.0</version.io.cloudevents>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -125,7 +125,7 @@
     <!-- Testing dependencies -->
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

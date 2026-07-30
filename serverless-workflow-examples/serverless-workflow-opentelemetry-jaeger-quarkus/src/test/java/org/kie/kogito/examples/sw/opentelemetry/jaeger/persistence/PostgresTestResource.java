@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 public class PostgresTestResource implements QuarkusTestResourceLifecycleManager {
@@ -32,12 +32,12 @@ public class PostgresTestResource implements QuarkusTestResourceLifecycleManager
             "postgres.image",
             "mirror.gcr.io/postgres:17-alpine");
 
-    private PostgreSQLContainer<?> postgres;
+    private PostgreSQLContainer postgres;
 
     @Override
     public Map<String, String> start() {
         DockerImageName imageName = DockerImageName.parse(IMAGE).asCompatibleSubstituteFor("postgres");
-        postgres = new PostgreSQLContainer<>(imageName).withDatabaseName("kogito").withUsername("kogito")
+        postgres = new PostgreSQLContainer(imageName).withDatabaseName("kogito").withUsername("kogito")
                 .withPassword("kogito");
         
         postgres.start();

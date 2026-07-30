@@ -38,10 +38,10 @@
   <description>Kogito Serverless Workflow OpenTelemetry - Quarkus</description>
 
   <properties>
-    <quarkus-plugin.version>3.20.3</quarkus-plugin.version>
+    <quarkus-plugin.version>3.33.3</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>3.20.3</quarkus.platform.version>
+    <quarkus.platform.version>3.33.3</quarkus.platform.version>
     <kogito.bom.group-id>org.kie.kogito</kogito.bom.group-id>
     <kogito.bom.artifact-id>kogito-bom</kogito.bom.artifact-id>
     <kogito.bom.version>111-SNAPSHOT</kogito.bom.version>
@@ -51,7 +51,8 @@
     <version.surefire.plugin>3.3.1</version.surefire.plugin>
     <version.failsafe.plugin>${version.surefire.plugin}</version.failsafe.plugin>
     <okhttp.version>4.12.0</okhttp.version>
-    <version.org.testcontainers>2.0.3</version.org.testcontainers>
+    <version.org.testcontainers>2.0.4</version.org.testcontainers>
+    <argLine></argLine>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -72,6 +73,16 @@
       <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers</artifactId>
+        <version>${version.org.testcontainers}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-junit-jupiter</artifactId>
+        <version>${version.org.testcontainers}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-postgresql</artifactId>
         <version>${version.org.testcontainers}</version>
       </dependency>
     </dependencies>
@@ -125,7 +136,7 @@
     <!-- Tests -->
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
+      <artifactId>quarkus-junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -146,13 +157,13 @@
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
+      <artifactId>testcontainers-junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.testcontainers</groupId>
-      <artifactId>postgresql</artifactId>
+      <artifactId>testcontainers-postgresql</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -189,6 +200,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${version.failsafe.plugin}</version>
         <configuration>
+          <argLine>@{argLine}</argLine>
           <systemPropertyVariables>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
