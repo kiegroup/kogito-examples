@@ -65,13 +65,6 @@ Map getMultijobPRConfig(JenkinsFolder jobFolder) {
                 ]
             ],
             [
-                id: 'kogito-springboot-examples',
-                primary: true,
-                env : [
-                    KOGITO_EXAMPLES_SUBFOLDER_POM: 'kogito-springboot-examples/',
-                ]
-            ],
-            [
                 id: 'serverless-workflow-examples',
                 primary: true,
                 env : [
