@@ -23,7 +23,7 @@ jobs:
         job_name: [ serverless-workflow-examples ]
         os: [ubuntu-latest]
         java-version: [17]
-        maven-version: ['3.9.11']
+        maven-version: ['3.9.16']
         include:
           - job_name: serverless-workflow-examples
             repository: kogito-examples
