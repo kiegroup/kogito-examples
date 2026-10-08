@@ -29,6 +29,6 @@
     "uuid": "^11.1.1",
     "js-yaml": "^4.3.2",
     "find-my-way": "^9.7.0",
-    "brace-expansion": "^1.1.16"
+    "brace-expansion": "^1.1.21"
   }
 }
