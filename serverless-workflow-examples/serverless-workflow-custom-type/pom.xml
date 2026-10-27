@@ -39,6 +39,9 @@
   <properties>
      <version.compiler.plugin>3.13.0</version.compiler.plugin>
      <quarkus-plugin.version>3.33.4.redhat-00004</quarkus-plugin.version>
+     <!-- TODO: merge quarkus-plugin.version and quarkus.core.version into one property — out of scope of SRVLOGIC-1300 -->
+     <!-- quarkus.core.version: io.quarkus core artifacts version (separate productization from platform: redhat-00004 vs redhat-00003) -->
+     <quarkus.core.version>3.33.4.redhat-00004</quarkus.core.version>
      <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
      <quarkus.platform.group-id>com.redhat.quarkus.platform</quarkus.platform.group-id>
      <quarkus.platform.version>3.33.4.redhat-00003</quarkus.platform.version>
