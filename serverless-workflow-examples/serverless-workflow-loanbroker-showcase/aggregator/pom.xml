@@ -29,6 +29,7 @@
   <name>Kogito Example :: Serverless Workflow Loan Broker Showcase :: Aggregator</name>
   <artifactId>serverless-workflow-loanbroker-showcase-aggregator</artifactId>
   <properties>
+    <quarkus-plugin.version>3.33.4.SP1-redhat-00001</quarkus-plugin.version>
     <skipITs>true</skipITs>
   </properties>
   <dependencyManagement>

@@ -36,6 +36,7 @@
   <name>Kogito Example :: Serverless Workflow Timeouts Showcase Operator Dev Profile</name>
 
   <properties>
+    <quarkus-plugin.version>3.33.4.SP1-redhat-00001</quarkus-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
