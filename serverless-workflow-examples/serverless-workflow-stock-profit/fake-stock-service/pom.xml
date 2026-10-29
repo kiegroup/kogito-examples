@@ -110,6 +110,7 @@
         </property>
       </activation>
       <properties>
+    <quarkus-plugin.version>3.33.4.SP1-redhat-00001</quarkus-plugin.version>
         <quarkus.native.enabled>true</quarkus.native.enabled>
       </properties>
     </profile>
