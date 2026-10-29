@@ -80,9 +80,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>io.quarkus</groupId>
+        <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>3.33.4.redhat-00004</version>
+        <version>${quarkus-plugin.version}</version>
         <executions>
           <execution>
             <goals>
