@@ -49,7 +49,8 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-extension-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <!-- quarkus-extension-maven-plugin exists only as io.quarkus core (redhat-00004), not in platform SP1 -->
+        <version>${quarkus.core.version}</version>
         <executions>
           <execution>
             <phase>compile</phase>
