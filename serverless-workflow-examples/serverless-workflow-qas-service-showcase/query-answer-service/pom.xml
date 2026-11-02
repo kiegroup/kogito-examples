@@ -31,7 +31,6 @@
   <artifactId>query-answer-service</artifactId>
   <name>Kogito Example :: Serverless Workflow Query and Answer :: Workflow Service</name>
   <properties>
-    <quarkus-plugin.version>3.33.4.SP1-redhat-00001</quarkus-plugin.version>
     <quarkus.platform.group-id>com.redhat.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.version>3.33.4.SP1-redhat-00001</quarkus.platform.version>
@@ -158,7 +157,7 @@
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <version>${quarkus.platform.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
