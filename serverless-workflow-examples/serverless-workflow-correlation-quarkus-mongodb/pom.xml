@@ -37,10 +37,9 @@
   <name>Kogito Example :: Serverless Workflow Correlation :: Quarkus :: MongoDB</name>
   <description>Kogito Serverless Workflow Correlation Example - Quarkus - MongoDB</description>
   <properties>
-    <quarkus-plugin.version>3.33.4.1</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>3.33.4.1</quarkus.platform.version>
+    <quarkus.platform.group-id>com.redhat.quarkus.platform</quarkus.platform.group-id>
+    <quarkus.platform.version>3.33.4.SP1-redhat-00001</quarkus.platform.version>
     <kogito.bom.group-id>org.kie.kogito</kogito.bom.group-id>
     <kogito.bom.artifact-id>kogito-bom</kogito.bom.artifact-id>
     <kogito.bom.version>111-SNAPSHOT</kogito.bom.version>
@@ -137,7 +136,7 @@
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <version>${quarkus.platform.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
