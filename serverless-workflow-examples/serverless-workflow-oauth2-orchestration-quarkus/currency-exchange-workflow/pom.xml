@@ -34,7 +34,7 @@
   <properties>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>com.redhat.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.33.4.SP2-redhat-00001</quarkus.platform.version>
+    <quarkus.platform.version>3.33.4.SP3-redhat-00001</quarkus.platform.version>
     <kogito.bom.group-id>org.kie.kogito</kogito.bom.group-id>
     <kogito.bom.artifact-id>kogito-bom</kogito.bom.artifact-id>
     <kogito.bom.version>9.106.0</kogito.bom.version>
