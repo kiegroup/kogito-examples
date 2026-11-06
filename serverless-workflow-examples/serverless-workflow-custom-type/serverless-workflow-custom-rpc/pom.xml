@@ -49,7 +49,7 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-extension-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <version>${quarkus.core.version}</version>
         <executions>
           <execution>
             <phase>compile</phase>
@@ -70,7 +70,7 @@
               <path>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-extension-processor</artifactId>
-                <version>${quarkus.platform.version}</version>
+                <version>${quarkus.core.version}</version>
               </path>
             </annotationProcessorPaths>
           </configuration>
